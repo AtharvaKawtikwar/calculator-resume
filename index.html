@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atharva's Interactive Calculator Resume</title>
+    <style>
+        body {
+            background: #2d2d2d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .calculator {
+            background: #1a1a1a;
+            border-radius: 20px;
+            width: 320px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        .commands {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            color: #7fff7f;
+            font-family: 'Courier New', monospace;
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .commands h3 {
+            color: #ff9500;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .command-group {
+            margin-bottom: 20px;
+        }
+
+        .command-item {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .command {
+            color: #7fff7f;
+            min-width: 100px;
+            font-weight: bold;
+        }
+
+        .description {
+            color: #ccc;
+        }
+
+        /* Previous calculator styles remain the same */
+        .brand {
+            color: #7fff7f;
+            text-align: center;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .screen {
+            background: #0d1a0d;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #1a3d1a;
+        }
+
+        #main-display {
+            color: #7fff7f;
+            font-size: 2.8em;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            min-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #sub-display {
+            color: #5a9e5a;
+            text-align: right;
+            font-size: 1em;
+            min-height: 20px;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            height: 60px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .special {
+            background: #2a2a2a;
+            color: #7fff7f;
+        }
+
+        .operator {
+            background: #ff9500;
+            color: white;
+        }
+
+        .equals {
+            background: #007200;
+        }
+
+        .decoder {
+            background: #0d1a0d;
+            color: #7fff7f;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            border: 1px solid #1a3d1a;
+        }
+
+        .highlight {
+            color: #ff9500;
+            font-weight: bold;
+        }
+
+        .link {
+            color: #7fff7f;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .link:hover {
+            color: #ff9500;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .calculator, .commands {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator">
+            <div class="brand">ATHARVA RESUME </div>
+            
+            <div class="screen">
+                <div id="sub-display">RESUME MODE</div>
+                <div id="main-display">0</div>
+            </div>
+            
+            <div class="buttons">
+                <!-- Row 1 -->
+                <button class="special" onclick="showSection('personal')">MC</button>
+                <button class="special" onclick="showSection('education')">MR</button>
+                <button class="special" onclick="showSection('work')">M+</button>
+                <button class="special" onclick="showSection('skills')">M-</button>
+                
+                <!-- Row 2 -->
+                <button class="operator" onclick="showSection('projects')">%</button>
+                <button class="operator" onclick="showSection('certifications')">CE</button>
+                <button class="operator" onclick="clearDisplay()">C</button>
+                <button class="operator" onclick="showSection('contact')">✅</button>
+                
+                <!-- Row 3 -->
+                <button onclick="showAchievement('simplilegal')">1/x</button>
+                <button onclick="showAchievement('greensprout')">x²</button>
+                <button onclick="showAchievement('ev-a22')">√x</button>
+                <button class="operator" onclick="backspace()">←</button>
+                
+                <!-- Row 4 -->
+                <button onclick="addDigit('7')">7</button>
+                <button onclick="addDigit('8')">8</button>
+                <button onclick="addDigit('9')">9</button>
+                <button class="operator" onclick="showSection('tech-stack')">×</button>
+                
+                <!-- Row 5 -->
+                <button onclick="addDigit('4')">4</button>
+                <button onclick="addDigit('5')">5</button>
+                <button onclick="addDigit('6')">6</button>
+                <button class="operator" onclick="showSection('data-eng')">-</button>
+                
+                <!-- Row 6 -->
+                <button onclick="addDigit('1')">1</button>
+                <button onclick="addDigit('2')">2</button>
+                <button onclick="addDigit('3')">3</button>
+                <button class="operator" onclick="showSection('ai-ml')">+</button>
+                
+                <!-- Row 7 -->
+                <button class="special" onclick="toggleSign()">±</button>
+                <button onclick="addDigit('0')">0</button>
+                <button onclick="addDecimal()">.</button>
+                <button class="operator equals" onclick="checkForSpecialCode()">=</button>
+            </div>
+            
+            <div class="decoder" id="decoder">
+                Press buttons to explore:
+                MC=Personal  MR=Education
+                M+=Work  M-=Skills
+                %=Projects  CE=Certs
+            </div>
+        </div>
+
+        <div class="commands">
+            <h3>COMMAND CHEAT SHEET</h3>
+            
+            <div class="command-group">
+                <h4>Memory Buttons</h4>
+                <div class="command-item">
+                    <div class="command">MC</div>
+                    <div class="description">Personal Information</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">MR</div>
+                    <div class="description">Education Details</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">M+</div>
+                    <div class="description">Work Experience</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">M-</div>
+                    <div class="description">Technical Skills</div>
+                </div>
+            </div>
+            
+            <div class="command-group">
+                <h4>Operator Buttons</h4>
+                <div class="command-item">
+                    <div class="command">%</div>
+                    <div class="description">Projects</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">CE</div>
+                    <div class="description">Certifications</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">×</div>
+                    <div class="description">Tech Stack</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">-</div>
+                    <div class="description">Data Engineering</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">+</div>
+                    <div class="description">AI/ML Experience</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">=</div>
+                    <div class="description">Complete Overview</div>
+                </div>
+            </div>
+            
+            <div class="command-group">
+                <h4>Special Number Codes</h4>
+                <div class="command-item">
+                    <div class="command">1337</div>
+                    <div class="description">GitHub Profile</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">8080</div>
+                    <div class="description">LinkedIn Profile</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">7007</div>
+                    <div class="description">Simplilegal Project</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">6006</div>
+                    <div class="description">GreenSprout Project</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">5005</div>
+                    <div class="description">EV A22 Project</div>
+                </div>
+            </div>
+            
+            <div class="command-group">
+                <h4>Function Buttons</h4>
+                <div class="command-item">
+                    <div class="command">1/x</div>
+                    <div class="description">Simplilegal Details</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">x²</div>
+                    <div class="description">GreenSprout Details</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">√x</div>
+                    <div class="description">EV A22 Details</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">✅</div>
+                    <div class="description">Contact Information</div>
+                </div>
+            </div>
+            
+            <div class="command-group">
+                <h4>Easter Eggs</h4>
+                <div class="command-item">
+                    <div class="command">5318008</div>
+                    <div class="description">Uniserved Performance</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">1000000</div>
+                    <div class="description">Jio Data Processing</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">31773</div>
+                    <div class="description">Name in Calculator Text</div>
+                </div>
+                <div class="command-item">
+                    <div class="command">7734</div>
+                    <div class="description">"HELLO" in Calculator Text</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Resume Data - All sections from your resume
+        const resumeData = {
+            personal: {
+                equation: "31773.7734",
+                explanation: `\n<span class="highlight">ATHARVA KAWTIKWAR</span>
+📍 Navi Mumbai, India
+📞 +91 9757012388
+📧 athukawtikwar@gmail.com
+🔗 <span class="link" onclick="openLink('linkedin')">LinkedIn</span> | <span class="link" onclick="openLink('personal')">Portfolio Website</span>`
+            },
+            education: {
+                equation: "3.3≈4.0",
+                explanation: `\n<span class="highlight">EDUCATION</span>
+🎓 <span class="highlight">MPSTME</span> - B.Tech IT
+📅 2022-2026 | Mumbai
+📊 CGPA: 3.3/4.0`
+            },
+            work: {
+                equation: "1E6+40%",
+                explanation: `\n<span class="highlight">WORK EXPERIENCE</span>
+                
+💻 <span class="highlight">Uniserved</span> (Web Dev Intern)
+➤ Built ReactJS-Django web app
+➤ 40% performance improvement
+➤ SQL database optimization
+📅 Aug 2024 - Nov 2024
+
+📊 <span class="highlight">Jio Platforms</span> (Data Eng Intern)
+➤ Optimized PySpark ETL pipelines
+➤ Processed 1M+ records daily
+➤ Airflow monitoring
+📅 May 2024 - July 2024`
+            },
+            skills: {
+                equation: "2^10×√144",
+                explanation: `\n<span class="highlight">TECHNICAL SKILLS</span>
+                
+🖥️ <span class="highlight">Frontend</span>
+ReactJS | NextJS | HTML/CSS | TypeScript
+
+⚙️ <span class="highlight">Backend</span>
+NodeJS | Express | Django | REST APIs
+
+📊 <span class="highlight">Data Engineering</span>
+PySpark | Kafka | Airflow | Hive
+
+☁️ <span class="highlight">Cloud/DevOps</span>
+AWS | Docker | Kubernetes | CI/CD`
+            },
+            projects: {
+                equation: "7!+1000",
+                explanation: `\n<span class="highlight">KEY PROJECTS</span>
+                
+🤖 <span class="highlight">Simplilegal</span>
+- Legal AI using Llama2-7B + RAG
+- <span class="link" onclick="openLink('simplilegal')">View Project</span>
+
+🌱 <span class="highlight">GreenSprout</span>
+- Eco donation platform
+- <span class="link" onclick="openLink('greensprout')">View Project</span>
+
+⚡ <span class="highlight">EV A22</span>
+- EV station locator
+- <span class="link" onclick="openLink('eva22')">View Project</span>`
+            },
+            certifications: {
+                equation: "10!÷3628800",
+                explanation: `\n<span class="highlight">CERTIFICATIONS</span>
+                
+📜 AWS Certified Cloud Practitioner
+📜 GenAI Specialization
+📜 Data Engineering Fundamentals`
+            },
+            'tech-stack': {
+                equation: "React+Node",
+                explanation: `\n<span class="highlight">FULL TECH STACK</span>
+                
+Frontend: ReactJS, NextJS, HTML/CSS
+Backend: NodeJS, Express, Django
+Databases: MongoDB, PostgreSQL, MySQL
+DevOps: AWS, Docker, Kubernetes, CI/CD`
+            },
+            'data-eng': {
+                equation: "Spark×Kafka",
+                explanation: `\n<span class="highlight">DATA ENGINEERING</span>
+                
+Apache Spark | PySpark | Hive
+Kafka | Airflow | ETL Pipelines
+Big Data Processing | Data Lakes
+SQL Optimization | 1M+ records/day`
+            },
+            'ai-ml': {
+                equation: "Llama2×RAG",
+                explanation: `\n<span class="highlight">AI/ML EXPERIENCE</span>
+                
+Generative AI | Llama2-7B
+Retrieval-Augmented Generation (RAG)
+Low-Rank Adaptation (LoRA)
+Quantization | Fine-tuning`
+            },
+            contact: {
+                equation: "7734",
+                explanation: `\n<span class="highlight">CONNECT WITH ME</span>
+                
+📞 +91 9757012388
+📧 athukawtikwar@gmail.com
+🔗 <span class="link" onclick="openLink('linkedin')">LinkedIn Profile</span>
+💻 <span class="link" onclick="openLink('github')">GitHub Profile</span>`
+            }
+        };
+
+        // Achievement codes - type these numbers to see
+        const achievementCodes = {
+            '5318008': "🔄 40% performance boost @Uniserved",
+            '1000000': "📊 Processed 1M+ records @Jio",
+            '5040': "⚖️ Simplilegal: 5040 legal queries handled",
+            '1024': "⚡ 1024x efficiency in Spark workflows",
+            '31773': "👋 ATHARVA (upside-down calculator text)",
+            '7734': "📞 Call me (hELLO upside-down)"
+        };
+
+        // Special link codes
+        const linkCodes = {
+            '1337': { name: "GitHub", url: "github" },
+            '8080': { name: "LinkedIn", url: "linkedin" },
+            '7007': { name: "Simplilegal Project", url: "simplilegal" },
+            '6006': { name: "GreenSprout Project", url: "greensprout" },
+            '5005': { name: "EV A22 Project", url: "eva22" }
+        };
+
+        // Project and social links (replace with your actual URLs)
+        const projectLinks = {
+            'simplilegal': 'https://github.com/AtharvaKawtikwar/Legalgenie.ai',
+            'greensprout': 'https://github.com/AtharvaKawtikwar/GreenSprout-Solutions',
+            'eva22': 'https://github.com/AtharvaKawtikwar/EV-A-to-Z',
+            'linkedin': 'https://linkedin.com/in/AtharvaKawtikwar',
+            'github': 'https://github.com/AtharvaKawtikwar',
+            'personal': 'https://atharva-kawtikwar.netlify.app/'
+        };
+
+        let currentDisplay = "0";
+        let currentEquation = "";
+        let lastOperation = null;
+
+        // Display functions
+        function updateDisplay() {
+            const display = document.getElementById('main-display');
+            display.textContent = currentDisplay;
+        }
+
+        function updateDecoder(text) {
+            document.getElementById('decoder').innerHTML = text;
+        }
+
+        // Button functions
+        function addDigit(digit) {
+            if (currentDisplay === "0") {
+                currentDisplay = digit;
+            } else {
+                currentDisplay += digit;
+            }
+            
+            if (achievementCodes[currentDisplay]) {
+                updateDecoder(achievementCodes[currentDisplay]);
+            }
+            
+            updateDisplay();
+        }
+
+        function addDecimal() {
+            if (!currentDisplay.includes('.')) {
+                currentDisplay += '.';
+                updateDisplay();
+            }
+        }
+
+        function clearDisplay() {
+            currentDisplay = "0";
+            currentEquation = "";
+            lastOperation = null;
+            updateDisplay();
+            updateDecoder("Press buttons to explore resume sections");
+        }
+
+        function backspace() {
+            if (currentDisplay.length > 1) {
+                currentDisplay = currentDisplay.slice(0, -1);
+            } else {
+                currentDisplay = "0";
+            }
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            if (currentDisplay !== "0") {
+                currentDisplay = currentDisplay.startsWith('-') ? 
+                    currentDisplay.substring(1) : '-' + currentDisplay;
+                updateDisplay();
+            }
+        }
+
+        // Link handling
+        function openLink(linkType) {
+            const url = projectLinks[linkType];
+            if (url) {
+                if (url === '#') {
+                    alert('Project link would open here');
+                } else {
+                    window.open(url, '_blank');
+                }
+            }
+        }
+
+        function checkForSpecialCode() {
+            // Check for link codes
+            const codeInfo = linkCodes[currentDisplay];
+            if (codeInfo) {
+                updateDecoder(`🔗 <span class="highlight">${codeInfo.name}</span>
+                \n<span class="link" onclick="openLink('${codeInfo.url}')">Click to open</span>`);
+                return;
+            }
+            
+            // Check for achievement codes
+            if (achievementCodes[currentDisplay]) {
+                updateDecoder(achievementCodes[currentDisplay]);
+                return;
+            }
+            
+            // Default equals behavior
+            showSection('all');
+        }
+
+        // Resume section functions
+        function showSection(section) {
+            if (resumeData[section]) {
+                currentDisplay = resumeData[section].equation;
+                updateDisplay();
+                updateDecoder(resumeData[section].explanation);
+            } else if (section === 'all') {
+                updateDecoder(`<span class="highlight">COMPLETE RESUME OVERVIEW</span>
+                
+${Object.values(resumeData).map(data => data.explanation.replace(/<[^>]+>/g, '')).join('\n\n')}`);
+            }
+        }
+
+        function showAchievement(project) {
+            const projects = {
+                'simplilegal': {
+                    display: "5040",
+                    text: `🤖 <span class="highlight">SIMPLILEGAL</span>
+- Fine-tuned Llama2-7B model
+- Legal advisory using RAG
+- <span class="link" onclick="openLink('simplilegal')">View Project</span>`
+                },
+                'greensprout': {
+                    display: "1000",
+                    text: `🌱 <span class="highlight">GREENSPROUT</span>
+- Eco donation platform
+- NodeJS backend
+- <span class="link" onclick="openLink('greensprout')">View Project</span>`
+                },
+                'ev-a22': {
+                    display: "A22",
+                    text: `⚡ <span class="highlight">EV A22</span>
+- EV station locator
+- Route optimization
+- <span class="link" onclick="openLink('eva22')">View Project</span>`
+                }
+            };
+            
+            if (projects[project]) {
+                currentDisplay = projects[project].display;
+                updateDisplay();
+                updateDecoder(projects[project].text);
+            }
+        }
+
+        // Initialize
+        clearDisplay();
+    </script>
+</body>
+</html>
